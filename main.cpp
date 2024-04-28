@@ -12,8 +12,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
-    //if (player != NULL)
-        player->Player_keyCallback(key, scancode, action);
+    player->Player_keyCallback(window, key, scancode, action, mods);   
 }
 
 void ShowWorld() {
@@ -46,7 +45,7 @@ void ShowWorld() {
 
 int main(void)
 {
-    player = new Player();
+    
     GLFWwindow* window;
 
     /* Initialize the library */
@@ -64,6 +63,7 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     glFrustum(-1, 1, -1, 1, 2, 80);
+    player = new Player();
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
