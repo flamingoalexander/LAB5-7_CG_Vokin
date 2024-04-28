@@ -12,6 +12,7 @@ public:
     float speed = 0;
     float rotateSpeedX = 0;
     float rotateSpeedY = 0;
+    int direction = 0;
     Player() {
         this->pos = new Point(0, 0);
     }
@@ -21,7 +22,9 @@ public:
 
     void MoveCamera() {
 
-        float angle = -zAlfa / 180 * 3.1415;
+         float angle = (-zAlfa / 180 * 3.1415) + (direction*1.57075);
+
+
          if (speed != 0) {
              pos->x += sin(angle) * speed;
              pos->y += cos(angle) * speed;
@@ -61,17 +64,34 @@ public:
                 speed = (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) ? 0.1 : 0.0;
                 break;
             case GLFW_KEY_A:
-                // Действия при нажатии клавиши A
+                if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS))
+                {
+                    speed = 0.1;
+                    direction = -1;
+                }
+                else {
+                    speed = 0;
+                    direction = 0;
+                }
                 break;
             case GLFW_KEY_S:
                 speed = (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) ? -0.1 : 0.0;
                 break;
             case GLFW_KEY_D:
                 // Действия при нажатии клавиши D
-                speed = (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ? 0.1 : 0.0;
+                if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS))
+                {
+                    speed = 0.1;
+                    direction = 1;
+                }
+                else {
+                    speed = 0;
+                    direction = 0;
+                }                
                 break;
         default:
             speed = 0;
+            direction = 0;
             break;
         }
 

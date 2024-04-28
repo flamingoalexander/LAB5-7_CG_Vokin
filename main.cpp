@@ -15,6 +15,18 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     player->Player_keyCallback(window, key, scancode, action, mods);   
 }
 
+
+
+void DrawPrisma() {
+    glPushMatrix();
+    float prisma[] = { 0,0,2, 1,1,0,   1,-1,0, -1,-1,0, -1,1,0, 1,1,0 };
+    glVertexPointer(3, GL_FLOAT, 0, &prisma);
+    glColor3f(1, 0, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+    glPopMatrix();
+}
+
+
 void ShowWorld() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, &vert);
@@ -29,6 +41,10 @@ void ShowWorld() {
             else {
                 glColor3f(1, 0, 1);
             }
+            /*if ((i == 4) && (j == 4))
+            {
+                DrawPrisma();
+            }*/
             glTranslatef(i * 2, j * 2, 0);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -64,11 +80,14 @@ int main(void)
     glfwMakeContextCurrent(window);
     glFrustum(-1, 1, -1, 1, 2, 80);
     player = new Player();
+
+
+    glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glPushMatrix();
 
 
