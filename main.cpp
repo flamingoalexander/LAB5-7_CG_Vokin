@@ -72,6 +72,7 @@ void DrawPrisma(int count) {
 
 
 void ShowWorld() {
+    glNormal3f(0, 0, 1);
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, &vert);
     for (int i = 0; i < 8; i++)
@@ -124,19 +125,37 @@ int main(void)
     glfwSetKeyCallback(window, keyCallback);
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-    glFrustum(-1, 1, -1, 1, 2, 80);
     player = new Player();
 
 
+
+
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-0.1, 0.1, -0.1, 0.1, 0.2, 200);
+    //glFrustum(-0.1, 0.1, -0.1, 0.1, 0.2, 200);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    //glFrustum(-1, 1, -1, 1, 2, 200);
+    //LIGHTING
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_DEPTH_TEST);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glPushMatrix();
+            glPushMatrix();
+            glRotatef(30, 0,1,0);
+            float position[] = { 0,0,1,0 };
+            glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-
+            glPopMatrix();
         player->MoveCamera();
         ShowWorld();
 

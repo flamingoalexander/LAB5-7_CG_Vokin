@@ -23,6 +23,9 @@ public:
 
     void MoveCamera() {
 
+
+        
+
          float angle = (-zAlfa / 180 * 3.1415) + (direction*1.57075);
 
 
