@@ -3,6 +3,7 @@
 #include "Point.h"
 #include <math.h>
 #include "Player.h"
+#include <vector>
 float vert[] = { 1,1,0,  1,-1,0, -1,-1,0, -1,1,0 };
 
 Player* player;
@@ -17,12 +18,55 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 
 
-void DrawPrisma() {
+void DrawPrisma(int count) {
     glPushMatrix();
-    float prisma[] = { 0,0,2, 1,1,0,   1,-1,0, -1,-1,0, -1,1,0, 1,1,0 };
-    glVertexPointer(3, GL_FLOAT, 0, &prisma);
+    glTranslatef(8,8,1);
+    glScalef(3,3,2);
+    std::vector<float> figure;
+    std::vector<float> figureUP;
+    std::vector<float> figureDOWN;
+    float step = 2 * 3.1415 / count;
+   
+    
+        for (int i = 0; i < count; i++)
+        {        
+            for (int z = 0; z < 2; z++)
+            {
+                figure.push_back(cos(step * i));
+                figure.push_back(sin(step * i));
+                figure.push_back(z);
+                if (z == 0) {
+                    figureDOWN.push_back(cos(step * i));
+                    figureDOWN.push_back(sin(step * i));
+                    figureDOWN.push_back(z);
+                }
+                else {
+                    figureUP.push_back(cos(step * i));
+                    figureUP.push_back(sin(step * i));
+                    figureUP.push_back(z);
+                }
+            }
+            
+        }   
+    figure.push_back(figure[0]);
+    figure.push_back(figure[1]);
+    figure.push_back(figure[2]);
+    figure.push_back(figure[3]);
+    figure.push_back(figure[4]);
+    figure.push_back(figure[5]);
+
+
+
+    
+
+    glVertexPointer(3, GL_FLOAT, 0, figure.data());
     glColor3f(1, 0, 0);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, count*2 + 2);
+    glVertexPointer(3, GL_FLOAT, 0, figureUP.data());
+    glDrawArrays(GL_POLYGON, 0, count);
+    glVertexPointer(3, GL_FLOAT, 0, figureDOWN.data());
+    glDrawArrays(GL_POLYGON, 0, count);
+    
     glPopMatrix();
 }
 
@@ -49,8 +93,10 @@ void ShowWorld() {
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             glPopMatrix();
+
         }
     }
+    DrawPrisma(5);
 
 
     glDisableClientState(GL_VERTEX_ARRAY);

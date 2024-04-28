@@ -13,6 +13,7 @@ public:
     float rotateSpeedX = 0;
     float rotateSpeedY = 0;
     int direction = 0;
+
     Player() {
         this->pos = new Point(0, 0);
     }
@@ -38,7 +39,7 @@ public:
         glRotatef(-xAlfa, 1, 0, 0);
         glRotatef(-zAlfa, 0, 0, 1);
 
-        glTranslatef(-pos->x, -pos->y, -2);
+        glTranslatef(-pos->x, -pos->y, -4);
         
 
     }
