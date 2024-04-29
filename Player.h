@@ -14,8 +14,12 @@ public:
     float rotateSpeedY = 0;
     int direction = 0;
 
+
+
+
+    float speedZ = 0;
     Player() {
-        this->pos = new Point(0, 0);
+        this->pos = new Point(0, 0, 4);
     }
 
 
@@ -32,7 +36,9 @@ public:
          if (speed != 0) {
              pos->x += sin(angle) * speed;
              pos->y += cos(angle) * speed;
-         }        
+         }               
+            pos->z += 0.5 * speedZ;             
+         
 
 
 
@@ -42,7 +48,7 @@ public:
         glRotatef(-xAlfa, 1, 0, 0);
         glRotatef(-zAlfa, 0, 0, 1);
 
-        glTranslatef(-pos->x, -pos->y, -4);
+        glTranslatef(-pos->x, -pos->y, -pos->z);
         
 
     }
@@ -91,11 +97,36 @@ public:
                 else {
                     speed = 0;
                     direction = 0;
-                }                
+                }   
+                break;
+            case GLFW_KEY_SPACE:               
+                if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS))
+                {
+                    if (speedZ < 0.1)
+                    {
+                        speedZ += 0.1;
+                    }
+                }
+                else {
+                    speedZ += -0.1;
+                }
+                break;
+            case GLFW_KEY_LEFT_SHIFT:                
+                if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
+                {
+                    if (speedZ > -0.1)
+                    {
+                        speedZ += -0.1;
+                    }
+                }
+                else {
+                    speedZ += 0.1;
+                }
                 break;
         default:
             speed = 0;
             direction = 0;
+            speedZ = 0;
             break;
         }
 
