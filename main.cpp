@@ -161,6 +161,7 @@ int main(void)
             glPopMatrix();
 
 
+            glPopMatrix();
         player->MoveCamera();
         glTranslatef(0, 0, -3);
         ShowWorld();
