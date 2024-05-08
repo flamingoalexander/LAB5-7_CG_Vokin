@@ -57,17 +57,45 @@ public:
         /*if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             speed = 0.1;
         }
-
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
             
-        }
-        
+        }        
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
             speed = -0.1;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             speed = 0.1;
         }*/
+
+
+        if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS))
+        {
+           //speedZ += 0.1;            
+        }
+        if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE))
+        {
+            //speedZ += -0.1;
+        }
+        if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
+        {            
+            //speedZ += -0.1;   
+            printf("PRESS");
+            if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE))
+            {
+                //speedZ += 0.1;
+                printf("RELEASE");
+            }
+        }
+       /* speedZ = (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) < 0 ? 1 : glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) < 0 ? -1 : 0,
+            GetKeyState('D') < 0 ? 1 : GetKeyState('A') < 0 ? -1 : 0,
+            0. 1);*/
+
+        
+
+
+
+
+
         switch (key)
         {
             case GLFW_KEY_W:
@@ -99,7 +127,7 @@ public:
                     direction = 0;
                 }   
                 break;
-            case GLFW_KEY_SPACE:               
+            /*case GLFW_KEY_SPACE:               
                 if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS))
                 {
                     if (speedZ < 0.1)
@@ -122,11 +150,11 @@ public:
                 else {
                     speedZ += 0.1;
                 }
-                break;
+                break;*/
         default:
             speed = 0;
             direction = 0;
-            speedZ = 0;
+            //speedZ = 0;
             break;
         }
 

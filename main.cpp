@@ -144,32 +144,38 @@ int main(void)
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_DEPTH_TEST);
-
+    float var = 0;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glPushMatrix();
-            glPushMatrix();
-            glRotatef(30, 0,1,0);
-            float position[] = { 0,0,1,0 };
-            glLightfv(GL_LIGHT0, GL_POSITION, position);
 
+            
+            glPushMatrix();
+            glRotatef(0, 0, 1, 0);
+            float position[] = { 0,0,-3,1 };
+            glLightfv(GL_LIGHT0, GL_POSITION, position);
+            glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
             glPopMatrix();
+
+
         player->MoveCamera();
+        glTranslatef(0, 0, -3);
         ShowWorld();
 
 
         glPopMatrix();
 
 
+            
 
 
 
 
-
-
+        var += 0.1;
+        
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
