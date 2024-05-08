@@ -154,16 +154,16 @@ int main(void)
 
             
             glPushMatrix();
-            glRotatef(0, 0, 1, 0);
+            glRotatef(30, 0, 1, 0);
             float position[] = { 0,0,-3,1 };
             glLightfv(GL_LIGHT0, GL_POSITION, position);
             glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
             glPopMatrix();
 
 
-            glPopMatrix();
+            
         player->MoveCamera();
-        glTranslatef(0, 0, -3);
+        //glTranslatef(0, 0, -3);
         ShowWorld();
 
 
@@ -175,7 +175,7 @@ int main(void)
 
 
 
-        var += 0.1;
+        //var += 0.1;
         
 
         /* Swap front and back buffers */
