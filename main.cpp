@@ -4,7 +4,96 @@
 #include <math.h>
 #include "Player.h"
 #include <vector>
+
+#include <random>
+
+// Функция для генерации случайного значения от 0 до 1
+double randomValue() {
+    // Создаем объект генератора случайных чисел
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(0.0, 1.0); // Определяем равномерное распределение в диапазоне [0, 1]
+
+    return dis(gen); // Генерируем случайное значение и возвращаем его
+}
+
+
+
+
+
+
+
 float vert[] = { 1,1,0,  1,-1,0, -1,-1,0, -1,1,0 };
+std::vector<float> normals = {1,1,3, 1,-1,3, -1,-1,3, -1,1,3};
+
+void Draw_Cube(float x, float y, float z, float width, float height, float depth) {
+    GLfloat vertices[] = {
+     x - width, y - depth, z - height,
+     x + width, y - depth, z - height,
+     x + width, y + depth, z - height,
+     x - width, y + depth, z - height,
+     x - width, y - depth, z + height,
+     x + width, y - depth, z + height,
+     x + width, y + depth, z + height,
+     x - width, y + depth, z + height
+    };
+    GLuint indices[] = {
+     0, 1, 2,
+     2, 3, 0,
+     1, 5, 6,
+     6, 2, 1,
+     7, 6, 5,
+     5, 4, 7,
+     4, 0, 3,
+     3, 7, 4,
+     4, 5, 1,
+     1, 0, 4,
+     3, 2, 6,
+     6, 7, 3
+    };
+    GLfloat normals[] = {
+     0.0f, 0.0f, -1.0f,
+     0.0f, 0.0f, -1.0f,
+     0.0f, 0.0f, -1.0f,
+     0.0f, 0.0f, -1.0f,
+     0.0f, 0.0f, 1.0f,
+     0.0f, 0.0f, 1.0f,
+     0.0f, 0.0f, 1.0f,
+     0.0f, 0.0f, 1.0f,
+     -1.0f, 0.0f, 0.0f,
+     -1.0f, 0.0f, 0.0f,
+     -1.0f, 0.0f, 0.0f,
+     -1.0f, 0.0f, 0.0f,
+     1.0f, 0.0f, 0.0f,
+     1.0f, 0.0f, 0.0f,
+     1.0f, 0.0f, 0.0f,
+     1.0f, 0.0f, 0.0f,
+     0.0f, -1.0f, 0.0f,
+     0.0f, -1.0f, 0.0f,
+     0.0f, -1.0f, 0.0f,
+     0.0f, -1.0f, 0.0f,
+     0.0f, 1.0f, 0.0f,
+     0.0f, 1.0f, 0.0f,
+     0.0f, 1.0f, 0.0f,
+     0.0f, 1.0f, 0.0f
+    };
+    glPushMatrix();
+    //Init_Material();
+    glColor3f(1, 1, 1);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glNormalPointer(GL_FLOAT, 0, normals);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, indices);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glEnable(GL_NORMALIZE);
+    glPopMatrix();
+}
+
+
+
+
 
 Player* player;
 //float angle = -zAlfa / 180 * 3.1415;
@@ -19,6 +108,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 
 void DrawPrisma(int count) {
+
+
     glPushMatrix();
     glTranslatef(8,8,1);
     glScalef(3,3,2);
@@ -58,51 +149,86 @@ void DrawPrisma(int count) {
 
 
     
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
 
     glVertexPointer(3, GL_FLOAT, 0, figure.data());
+    glNormalPointer(GL_FLOAT, 0, figure.data());
     glColor3f(1, 0, 0);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, count*2 + 2);
+
     glVertexPointer(3, GL_FLOAT, 0, figureUP.data());
+    glNormalPointer(GL_FLOAT, 0, figureUP.data());
+
     glDrawArrays(GL_POLYGON, 0, count);
     glVertexPointer(3, GL_FLOAT, 0, figureDOWN.data());
+    glNormalPointer(GL_FLOAT, 0, figureDOWN.data());
     glDrawArrays(GL_POLYGON, 0, count);
     
+
+
+    
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
     glPopMatrix();
 }
 
 
 void ShowWorld() {
     glShadeModel(GL_SMOOTH);
-    glNormal3f(0, 0, 1);
+    //glNormal3f(0, 0, 1);
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, &vert);
+    glEnableClientState(GL_NORMAL_ARRAY);
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             glPushMatrix();
+            
             if (((i + j) % 2) == 0) {
                 glColor3f(0, 0.2, 0);
             }
             else {
                 glColor3f(1, 0, 1);
             }
-            /*if ((i == 4) && (j == 4))
-            {
-                DrawPrisma();
-            }*/
             glTranslatef(i * 2, j * 2, 0);
+            glVertexPointer(3, GL_FLOAT, 0, &vert);
+            glNormalPointer(GL_FLOAT, 0, normals.data());
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             glPopMatrix();
-
+            
         }
     }
-    DrawPrisma(5);
-
-
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    DrawPrisma(5);
+    //Draw_Cube(7, 7, 1, 1, 1, 1);    
 
+}
+
+
+void ApplyLight(float angle) {
+    //glPushMatrix();
+
+    //glRotatef(30, 0, 1, 0);
+    std::vector<float> position;
+    position.push_back(7);
+    position.push_back((5*cos(angle))+7);
+    position.push_back((5*sin(angle)));
+    position.push_back(1);
+
+
+    std::vector<float> direction;
+    direction.push_back(0);
+    direction.push_back(-cos(angle));
+    direction.push_back(-sin(angle));
+
+    Draw_Cube(position[0], position[1], position[2]-2, 0.3, 0.3, 0.3);
+    glLightfv(GL_LIGHT0, GL_POSITION, position.data());
+    //glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
+    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction.data());
+    //glPopMatrix();
 }
 
 
@@ -140,35 +266,41 @@ int main(void)
     glLoadIdentity();
     //glFrustum(-1, 1, -1, 1, 2, 200);
     //LIGHTING
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_DEPTH_TEST);
-    float var = 0;
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 8.0);
+    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
+
     /* Loop until the user closes the window */
+    float angle = 0;
+    float rotspeed = 0;
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         glPushMatrix();
+        
+        
+        player->MoveCamera();    
 
-            
-            glPushMatrix();
-            glRotatef(30, 0, 1, 0);
-            float position[] = { 0,0,-3,1 };
-            glLightfv(GL_LIGHT0, GL_POSITION, position);
-            glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
-            glPopMatrix();
-
-
-            
-        player->MoveCamera();
-        //glTranslatef(0, 0, -3);
-        ShowWorld();
-
+            ApplyLight(angle);
+        
+            ShowWorld();      
 
         glPopMatrix();
 
+            
+        
+
+        
+        angle += 0.01;
+        angle = angle > 3.1415*2 ? 0 : angle;
+            
+
+        
 
             
 

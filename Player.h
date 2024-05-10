@@ -27,10 +27,8 @@ public:
 
     void MoveCamera() {
 
-
-        
-
          float angle = (-zAlfa / 180 * 3.1415) + (direction*1.57075);
+
 
 
          if (speed != 0) {
@@ -39,8 +37,6 @@ public:
          }               
             pos->z += 0.5 * speedZ;             
          
-
-
 
         zAlfa += rotateSpeedX;
         xAlfa += rotateSpeedY;
@@ -70,28 +66,37 @@ public:
 
         if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS))
         {
-           //speedZ += 0.1;            
+           speedZ = 0.1;        
+           std::cout << 123;
         }
         if ((glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE))
         {
-            //speedZ += -0.1;
+            
+            speedZ = 0;
         }
         if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS))
         {            
-            //speedZ += -0.1;   
-            printf("PRESS");
-            if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE))
-            {
-                //speedZ += 0.1;
-                printf("RELEASE");
-            }
+            speedZ = -0.1;   
+            //printf("PRESS");
+        }
+        if ((glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE))
+        {
+                //speedZ = 0;
+                //printf("RELEASE");
         }
        /* speedZ = (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) < 0 ? 1 : glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) < 0 ? -1 : 0,
             GetKeyState('D') < 0 ? 1 : GetKeyState('A') < 0 ? -1 : 0,
             0. 1);*/
 
-        
-
+        if (speedZ > 0.1)
+        {
+            speedZ = 0.1;
+        }
+        if (speedZ < -0.1)
+        {
+            speed = -0.1;
+        }
+            
 
 
 
