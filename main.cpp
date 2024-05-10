@@ -107,12 +107,12 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 
 
-void DrawPrisma(int count) {
+void DrawPrisma(int count, Point* pos, float transparency) {
 
 
     glPushMatrix();
-    glTranslatef(8,8,1);
-    glScalef(3,3,2);
+    glTranslatef(pos->x,pos->y,pos->z);
+    glScalef(1,1,1);
     std::vector<float> figure;
     std::vector<float> figureUP;
     std::vector<float> figureDOWN;
@@ -154,7 +154,7 @@ void DrawPrisma(int count) {
 
     glVertexPointer(3, GL_FLOAT, 0, figure.data());
     glNormalPointer(GL_FLOAT, 0, figure.data());
-    glColor3f(1, 0, 0);
+    glColor4f(1, 1, 0, transparency);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, count*2 + 2);
 
     glVertexPointer(3, GL_FLOAT, 0, figureUP.data());
@@ -189,7 +189,7 @@ void ShowWorld() {
                 glColor3f(0, 0.2, 0);
             }
             else {
-                glColor3f(1, 0, 1);
+                glColor3f(1, 0.5, 0);
             }
             glTranslatef(i * 2, j * 2, 0);
             glVertexPointer(3, GL_FLOAT, 0, &vert);
@@ -202,7 +202,15 @@ void ShowWorld() {
     }
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
-    DrawPrisma(5);
+
+    //DRAW PRISMAS
+    for (int i = 0; i < 9; i++)
+    {
+        float step = 2 * 3.1415 / 9;
+        DrawPrisma(9, new Point((4*cos(step*i)) + 7, (4 * sin(step * i)) + 7, 1), 0.1*i + 0.1);
+    }
+    DrawPrisma(9, new Point(7,7,1), 1);
+
     //Draw_Cube(7, 7, 1, 1, 1, 1);    
 
 }
@@ -214,8 +222,8 @@ void ApplyLight(float angle) {
     //glRotatef(30, 0, 1, 0);
     std::vector<float> position;
     position.push_back(7);
-    position.push_back((5*cos(angle))+7);
-    position.push_back((5*sin(angle)));
+    position.push_back((30*cos(angle))+7);
+    position.push_back((30*sin(angle)));
     position.push_back(1);
 
 
@@ -231,6 +239,12 @@ void ApplyLight(float angle) {
     //glPopMatrix();
 }
 
+
+void gameInit() {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_ALPHA_TEST);
+}
 
 
 int main(void)
@@ -271,8 +285,8 @@ int main(void)
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 8.0);
-    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 30);
-
+    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180);
+    gameInit();
     /* Loop until the user closes the window */
     float angle = 0;
     float rotspeed = 0;
@@ -296,7 +310,7 @@ int main(void)
         
 
         
-        angle += 0.01;
+        angle += 0.001;
         angle = angle > 3.1415*2 ? 0 : angle;
             
 
