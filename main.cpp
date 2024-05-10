@@ -23,7 +23,8 @@ double randomValue() {
 
 
 
-float vert[] = { 1,1,0,  1,-1,0, -1,-1,0, -1,1,0 };
+//float vert[] = { 1,1,0,  1,-1,0, -1,-1,0, -1,1,0 };
+float vert[] = { 0.01,0.01,0,  0.01,-0.01,0, -0.01,-0.01,0, -0.01,0.01,0 };
 std::vector<float> normals = {1,1,3, 1,-1,3, -1,-1,3, -1,1,3};
 
 void Draw_Cube(float x, float y, float z, float width, float height, float depth) {
@@ -116,24 +117,33 @@ void DrawPrisma(int count, Point* pos, float transparency) {
     std::vector<float> figure;
     std::vector<float> figureUP;
     std::vector<float> figureDOWN;
-    float step = 2 * 3.1415 / count;
-   
-    
+    float step = 2 * 3.1415 / count;   
         for (int i = 0; i < count; i++)
         {        
             for (int z = 0; z < 2; z++)
             {
-                figure.push_back(cos(step * i));
-                figure.push_back(sin(step * i));
-                figure.push_back(z);
+                float koef = 0;
+                if (z == 1)
+                {
+                    koef = 0.5;
+
+                }
+                if (z == 0)
+                {
+                    koef = 1.0;
+
+                }
+                 figure.push_back(cos(step * i)*(koef));
+                 figure.push_back(sin(step * i)*(koef));
+                 figure.push_back(z);
                 if (z == 0) {
                     figureDOWN.push_back(cos(step * i));
                     figureDOWN.push_back(sin(step * i));
                     figureDOWN.push_back(z);
                 }
                 else {
-                    figureUP.push_back(cos(step * i));
-                    figureUP.push_back(sin(step * i));
+                    figureUP.push_back(cos(step * i)/2);
+                    figureUP.push_back(sin(step * i)/2);
                     figureUP.push_back(z);
                 }
             }
@@ -160,9 +170,12 @@ void DrawPrisma(int count, Point* pos, float transparency) {
     glVertexPointer(3, GL_FLOAT, 0, figureUP.data());
     glNormalPointer(GL_FLOAT, 0, figureUP.data());
 
+
+    //glColor4f(0, 0, 1, transparency);
     glDrawArrays(GL_POLYGON, 0, count);
     glVertexPointer(3, GL_FLOAT, 0, figureDOWN.data());
     glNormalPointer(GL_FLOAT, 0, figureDOWN.data());
+    //glColor4f(1, 0, 0, transparency);
     glDrawArrays(GL_POLYGON, 0, count);
     
 
@@ -179,19 +192,19 @@ void ShowWorld() {
     //glNormal3f(0, 0, 1);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 180; i++)
     {
-        for (int j = 0; j < 8; j++)
+        for (int j = 0; j < 180; j++)
         {
             glPushMatrix();
             
             if (((i + j) % 2) == 0) {
-                glColor3f(0, 0.2, 0);
+                glColor3f(1, 0.5, 0);
             }
             else {
                 glColor3f(1, 0.5, 0);
             }
-            glTranslatef(i * 2, j * 2, 0);
+            glTranslatef(i * 2* 0.01, j * 2* 0.01, 0);
             glVertexPointer(3, GL_FLOAT, 0, &vert);
             glNormalPointer(GL_FLOAT, 0, normals.data());
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -221,16 +234,16 @@ void ApplyLight(float angle) {
 
     //glRotatef(30, 0, 1, 0);
     std::vector<float> position;
-    position.push_back(7);
-    position.push_back((30*cos(angle))+7);
-    position.push_back((30*sin(angle)));
+    position.push_back(1);
+    position.push_back((20*cos(angle)));
+    position.push_back((20*sin(angle)));
     position.push_back(1);
 
 
     std::vector<float> direction;
     direction.push_back(0);
-    direction.push_back(-cos(angle));
-    direction.push_back(-sin(angle));
+    direction.push_back(0);
+    direction.push_back(-1);
 
     Draw_Cube(position[0], position[1], position[2]-2, 0.3, 0.3, 0.3);
     glLightfv(GL_LIGHT0, GL_POSITION, position.data());
@@ -285,7 +298,7 @@ int main(void)
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 8.0);
-    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180);
+    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 60);
     gameInit();
     /* Loop until the user closes the window */
     float angle = 0;
@@ -310,7 +323,7 @@ int main(void)
         
 
         
-        angle += 0.001;
+        angle += 0.01;
         angle = angle > 3.1415*2 ? 0 : angle;
             
 
